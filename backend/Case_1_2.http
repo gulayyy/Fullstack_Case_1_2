@@ -1,0 +1,81 @@
+@Case_1_2_HostAddress = http://localhost:5125
+@AccessToken = 
+
+### Register a new user
+POST {{Case_1_2_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "Test123!",
+  "firstName": "Test",
+  "lastName": "User"
+}
+
+###
+
+### Login user
+POST {{Case_1_2_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "testuser",
+  "password": "Test123!"
+}
+
+###
+
+### Get user profile (requires authentication)
+GET {{Case_1_2_HostAddress}}/api/auth/profile
+Authorization: Bearer {{AccessToken}}
+
+###
+
+### Get all products (public)
+GET {{Case_1_2_HostAddress}}/api/products
+Accept: application/json
+
+###
+
+### Get product by ID (public)
+GET {{Case_1_2_HostAddress}}/api/products/1
+Accept: application/json
+
+###
+
+### Create a new product (requires authentication)
+POST {{Case_1_2_HostAddress}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
+
+{
+  "name": "Test Product",
+  "description": "This is a test product",
+  "price": 29.99,
+  "stock": 100,
+  "category": "Electronics"
+}
+
+###
+
+### Update a product (requires authentication)
+PUT {{Case_1_2_HostAddress}}/api/products/1
+Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
+
+{
+  "name": "Updated Test Product",
+  "description": "This is an updated test product",
+  "price": 39.99,
+  "stock": 75,
+  "category": "Electronics"
+}
+
+###
+
+### Delete a product (requires authentication)
+DELETE {{Case_1_2_HostAddress}}/api/products/1
+Authorization: Bearer {{AccessToken}}
+
+###
