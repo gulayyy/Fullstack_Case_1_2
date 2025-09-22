@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-// Removed i18n
+import { useTranslations } from '@/providers/I18nProvider'
 import { useDispatch } from 'react-redux'
 import { useRouter, useParams } from 'next/navigation'
 import { loginSuccess, setLoading } from '@/store/slices/authSlice'
@@ -12,7 +12,7 @@ import { UserPlus, Eye, EyeOff } from 'lucide-react'
 export default function RegisterPage() {
   const params = useParams()
   const locale = params.locale as string
-  // Removed i18n
+  const t = useTranslations('auth')
   const dispatch = useDispatch()
   const router = useRouter()
   
@@ -49,15 +49,19 @@ export default function RegisterPage() {
       
       // Redirect to products page
       router.push(`/${locale}/products`)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error)
-      if (error.response?.data?.errors) {
-        // Handle validation errors
-        const errors = error.response.data.errors
-        const errorMessages = Object.values(errors).flat()
-        setError(errorMessages.join(', '))
+      if (error && typeof error === 'object' && 'response' in error) {
+        const responseError = error as { response?: { data?: { errors?: Record<string, string[]> } | string } }
+        if (responseError.response?.data && typeof responseError.response.data === 'object' && 'errors' in responseError.response.data) {
+          const errors = responseError.response.data.errors
+          const errorMessages = Object.values(errors || {}).flat()
+          setError((errorMessages as string[]).join(', '))
+        } else {
+          setError(typeof responseError.response?.data === 'string' ? responseError.response.data : 'Registration failed. Please try again.')
+        }
       } else {
-        setError(error.response?.data || 'Registration failed. Please try again.')
+        setError('Registration failed. Please try again.')
       }
     } finally {
       setIsLoading(false)
@@ -69,8 +73,8 @@ export default function RegisterPage() {
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
       <div className="text-center mb-8">
         <UserPlus className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900">Register</h1>
-        <p className="text-gray-600 mt-2">Create your account to get started</p>
+        <h1 className="text-2xl font-bold" style={{color: '#000000'}}>{t('register')}</h1>
+        <p className="mt-2" style={{color: '#000000', fontWeight: '600'}}>Create your account to get started</p>
       </div>
 
       {error && (
@@ -82,8 +86,8 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-              First Name
+            <label htmlFor="firstName" className="block text-sm mb-1" style={{color: '#000000', fontWeight: '700'}}>
+              {t('firstName')}
             </label>
             <input
               type="text"
@@ -93,13 +97,14 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="First name"
+              placeholder={t('placeholders.firstName')}
+              style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
             />
           </div>
 
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name
+            <label htmlFor="lastName" className="block text-sm mb-1" style={{color: '#000000', fontWeight: '700'}}>
+              {t('lastName')}
             </label>
             <input
               type="text"
@@ -109,14 +114,15 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Last name"
+              placeholder={t('placeholders.lastName')}
+              style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-            Username
+          <label htmlFor="username" className="block text-sm mb-1" style={{color: '#000000', fontWeight: '700'}}>
+            {t('username')}
           </label>
           <input
             type="text"
@@ -126,13 +132,14 @@ export default function RegisterPage() {
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Choose a username"
+            placeholder={t('placeholders.chooseUsername')}
+            style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
+          <label htmlFor="email" className="block text-sm mb-1" style={{color: '#000000', fontWeight: '700'}}>
+            {t('email')}
           </label>
           <input
             type="email"
@@ -142,13 +149,14 @@ export default function RegisterPage() {
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter your email"
+            placeholder={t('placeholders.enterEmail')}
+            style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password
+          <label htmlFor="password" className="block text-sm mb-1" style={{color: '#000000', fontWeight: '700'}}>
+            {t('password')}
           </label>
           <div className="relative">
             <input
@@ -160,7 +168,8 @@ export default function RegisterPage() {
               required
               minLength={6}
               className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Create a password (min 6 chars)"
+              placeholder={t('placeholders.createPassword')}
+              style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
             />
             <button
               type="button"

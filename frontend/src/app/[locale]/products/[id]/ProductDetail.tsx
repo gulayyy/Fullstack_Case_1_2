@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-// Removed i18n
+import { useEffect, useState, useCallback } from 'react'
+import { useTranslations } from '@/providers/I18nProvider'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
 import { addToCart } from '@/store/slices/cartSlice'
@@ -22,7 +22,8 @@ interface Product {
 }
 
 export default function ProductDetail({ params }: { params: { id: string; locale: string } }) {
-  // Removed i18n
+  const t = useTranslations('products')
+  const tCommon = useTranslations('common')
   const dispatch = useDispatch()
   const { isAuthenticated } = useSelector((state: RootState) => state.auth)
   
@@ -30,21 +31,24 @@ export default function ProductDetail({ params }: { params: { id: string; locale
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchProduct()
-  }, [params.id])
-
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       setIsLoading(true)
       const productData = await productService.getProductById(parseInt(params.id))
       setProduct(productData)
-    } catch (error: any) {
-      setError(error.response?.data || 'Product not found')
+    } catch (error: unknown) {
+      const errorMessage = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: string } }).response?.data || 'Product not found'
+        : 'Product not found'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [params.id])
+
+  useEffect(() => {
+    fetchProduct()
+  }, [fetchProduct])
 
   const handleAddToCart = () => {
     if (product) {
@@ -59,8 +63,11 @@ export default function ProductDetail({ params }: { params: { id: string; locale
       await productService.deleteProduct(product.id)
       // Redirect to products page
       window.location.href = `/${params.locale}/products`
-    } catch (error: any) {
-      alert('Failed to delete product: ' + (error.response?.data || error.message))
+    } catch (error: unknown) {
+      const errorMessage = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: string } }).response?.data || 'Failed to delete product'
+        : 'Failed to delete product'
+      alert('Failed to delete product: ' + errorMessage)
     }
   }
 
@@ -112,7 +119,7 @@ export default function ProductDetail({ params }: { params: { id: string; locale
           className="flex items-center text-gray-600 hover:text-gray-800 mr-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Products
+          {tCommon('backToProducts')}
         </Link>
       </div>
 
@@ -164,7 +171,7 @@ export default function ProductDetail({ params }: { params: { id: string; locale
           <div className="flex items-center space-x-4 text-sm text-gray-600">
             <div className="flex items-center">
               <Package className="h-4 w-4 mr-1" />
-              <span>{t('stock')}: {product.stock}</span>
+              <span>{tCommon('stock')}: {product.stock}</span>
             </div>
             <div className="flex items-center">
               <Calendar className="h-4 w-4 mr-1" />
@@ -173,7 +180,7 @@ export default function ProductDetail({ params }: { params: { id: string; locale
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('description')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{tCommon('description')}</h3>
             <p className="text-gray-600 leading-relaxed">
               {product.description || 'No description available.'}
             </p>
@@ -194,21 +201,21 @@ export default function ProductDetail({ params }: { params: { id: string; locale
           <div className="border-t pt-6 space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">Product Details</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500">Product ID:</span>
-                <span className="ml-2 font-medium">#{product.id}</span>
+              <div className="flex flex-col">
+                <span className="text-gray-700 font-medium">Product ID:</span>
+                <span className="text-gray-900 font-semibold">#{product.id}</span>
               </div>
-              <div>
-                <span className="text-gray-500">Category:</span>
-                <span className="ml-2 font-medium">{product.category}</span>
+              <div className="flex flex-col">
+                <span className="text-gray-700 font-medium">Category:</span>
+                <span className="text-gray-900 font-semibold">{product.category}</span>
               </div>
-              <div>
-                <span className="text-gray-500">Stock:</span>
-                <span className="ml-2 font-medium">{product.stock} units</span>
+              <div className="flex flex-col">
+                <span className="text-gray-700 font-medium">Stock:</span>
+                <span className="text-gray-900 font-semibold">{product.stock} units</span>
               </div>
-              <div>
-                <span className="text-gray-500">Last Updated:</span>
-                <span className="ml-2 font-medium">{formatDate(product.updatedAt)}</span>
+              <div className="flex flex-col">
+                <span className="text-gray-700 font-medium">Last Updated:</span>
+                <span className="text-gray-900 font-semibold">{formatDate(product.updatedAt)}</span>
               </div>
             </div>
           </div>

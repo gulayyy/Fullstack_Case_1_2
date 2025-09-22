@@ -1,7 +1,7 @@
 'use client'
 
-// Simple navigation without i18n for now
 import { useSelector, useDispatch } from 'react-redux'
+import { useTranslations } from '@/providers/I18nProvider'
 import { RootState } from '@/store/store'
 import { logout } from '@/store/slices/authSlice'
 import Link from 'next/link'
@@ -9,7 +9,7 @@ import { usePathname } from 'next/navigation'
 import { ShoppingCart, User, LogOut, Home, Package, UserPlus, LogIn } from 'lucide-react'
 
 export default function Navigation() {
-  // Simple text labels without i18n for now
+  const t = useTranslations('navigation')
   const pathname = usePathname()
   const dispatch = useDispatch()
   
@@ -44,11 +44,11 @@ export default function Navigation() {
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                 isActive('') || isActive('/')
                   ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-gray-700 hover:text-gray-700'
               }`}
             >
               <Home className="h-4 w-4" />
-              <span>Home</span>
+              <span>{t('home')}</span>
             </Link>
             
             <Link
@@ -56,11 +56,11 @@ export default function Navigation() {
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
                 isActive('/products')
                   ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-gray-700 hover:text-gray-700'
               }`}
             >
               <Package className="h-4 w-4" />
-              <span>Products</span>
+              <span>{t('products')}</span>
             </Link>
 
             <Link
@@ -68,11 +68,11 @@ export default function Navigation() {
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium relative ${
                 isActive('/cart')
                   ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
+                  : 'text-gray-700 hover:text-gray-700'
               }`}
             >
               <ShoppingCart className="h-4 w-4" />
-              <span>Cart</span>
+              <span>{t('cart')}</span>
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {totalItems}
@@ -88,7 +88,7 @@ export default function Navigation() {
               <Link
                 href={pathname.replace(`/${locale}`, '/en')}
                 className={`px-2 py-1 rounded text-sm ${
-                  locale === 'en' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'
+                  locale === 'en' ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:text-gray-700'
                 }`}
               >
                 EN
@@ -96,7 +96,7 @@ export default function Navigation() {
               <Link
                 href={pathname.replace(`/${locale}`, '/tr')}
                 className={`px-2 py-1 rounded text-sm ${
-                  locale === 'tr' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:text-gray-700'
+                  locale === 'tr' ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:text-gray-700'
                 }`}
               >
                 TR
@@ -107,34 +107,34 @@ export default function Navigation() {
               <div className="flex items-center space-x-4">
                 <Link
                   href={`/${locale}/profile`}
-                  className="flex items-center space-x-1 text-gray-500 hover:text-gray-700"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-gray-700"
                 >
                   <User className="h-4 w-4" />
                   <span className="hidden md:inline">{user?.firstName}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 text-gray-500 hover:text-gray-700"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-gray-700"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span className="hidden md:inline">Logout</span>
+                  <span className="hidden md:inline">{t('logout')}</span>
                 </button>
               </div>
             ) : (
               <div className="flex items-center space-x-4">
                 <Link
                   href={`/${locale}/auth/login`}
-                  className="flex items-center space-x-1 text-gray-500 hover:text-gray-700"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-gray-700"
                 >
                   <LogIn className="h-4 w-4" />
-                  <span>Login</span>
+                  <span>{t('login')}</span>
                 </Link>
                 <Link
                   href={`/${locale}/auth/register`}
                   className="flex items-center space-x-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
                   <UserPlus className="h-4 w-4" />
-                  <span>Register</span>
+                  <span>{t('register')}</span>
                 </Link>
               </div>
             )}

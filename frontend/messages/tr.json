@@ -11,7 +11,12 @@
     "search": "Ara",
     "filter": "Filtrele",
     "sort": "Sırala",
-    "clear": "Temizle"
+    "clear": "Temizle",
+    "tryAgain": "Tekrar Dene",
+    "backToProducts": "Ürünlere Dön",
+    "continueShopping": "Alışverişe Devam Et",
+    "stock": "Stok",
+    "description": "Açıklama"
   },
   "navigation": {
     "home": "Ana Sayfa",
@@ -34,7 +39,16 @@
     "registerSuccess": "Kayıt başarılı!",
     "loginError": "Giriş başarısız. Bilgilerinizi kontrol edin.",
     "registerError": "Kayıt başarısız. Tekrar deneyin.",
-    "usernameOrEmail": "Kullanıcı Adı veya E-posta"
+    "usernameOrEmail": "Kullanıcı Adı veya E-posta",
+    "placeholders": {
+      "enterUsernameOrEmail": "Kullanıcı adınızı veya e-posta adresinizi girin",
+      "enterPassword": "Şifrenizi girin",
+      "firstName": "Adınız",
+      "lastName": "Soyadınız",
+      "chooseUsername": "Kullanıcı adı seçin",
+      "enterEmail": "E-posta adresinizi girin",
+      "createPassword": "Şifre oluşturun (en az 6 karakter)"
+    }
   },
   "products": {
     "title": "Ürünler",
@@ -59,7 +73,13 @@
     "sortByPrice": "Fiyat",
     "sortByDate": "Tarih",
     "ascending": "Artan",
-    "descending": "Azalan"
+    "descending": "Azalan",
+    "placeholders": {
+      "enterProductName": "Ürün adını girin",
+      "enterProductDescription": "Ürün açıklamasını girin",
+      "min": "Min",
+      "max": "Maks"
+    }
   },
   "cart": {
     "title": "Alışveriş Sepeti",
@@ -70,5 +90,34 @@
     "clearCart": "Sepeti Temizle",
     "checkout": "Satın Al",
     "itemsInCart": "Sepette {count} ürün"
+  },
+  "home": {
+    "hero": {
+      "subtitle": "Modern Full Stack Ürün Yönetim Uygulaması"
+    },
+    "features": {
+      "title": "Özellikler",
+      "productManagement": {
+        "title": "Ürün Yönetimi",
+        "description": "Gerçek zamanlı güncellemelerle eksiksiz CRUD işlemleri"
+      },
+      "shoppingCart": {
+        "title": "Alışveriş Sepeti", 
+        "description": "Redux state yönetimiyle gelişmiş sepet yönetimi"
+      },
+      "userAuthentication": {
+        "title": "Kullanıcı Kimlik Doğrulama",
+        "description": "Güvenli JWT tabanlı kimlik doğrulama ve yetkilendirme"
+      },
+      "performance": {
+        "title": "Performans",
+        "description": "Redis önbellek, SSR/ISR ve hız için optimize edilmiş"
+      }
+    },
+    "techStack": {
+      "title": "Teknoloji Yığını",
+      "backend": "Backend",
+      "frontend": "Frontend"
+    }
   }
 }

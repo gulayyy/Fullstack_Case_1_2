@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from '@/providers/I18nProvider'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Package, ShoppingCart, Users, TrendingUp } from 'lucide-react'
@@ -7,6 +8,9 @@ import { Package, ShoppingCart, Users, TrendingUp } from 'lucide-react'
 export default function HomePage() {
   const params = useParams()
   const locale = params.locale as string
+  const t = useTranslations('home')
+  const tNav = useTranslations('navigation')
+  const tAuth = useTranslations('auth')
 
   return (
     <div className="space-y-12">
@@ -16,59 +20,59 @@ export default function HomePage() {
           {process.env.NEXT_PUBLIC_APP_NAME}
         </h1>
         <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-          Modern Full Stack Product Management Application
+          {t('hero.subtitle')}
         </p>
         <div className="space-x-4">
           <Link
             href={`/${locale}/products`}
             className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           >
-Products
+            {tNav('products')}
           </Link>
           <Link
             href={`/${locale}/auth/register`}
             className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
           >
-Register
+            {tAuth('register')}
           </Link>
         </div>
       </section>
 
       {/* Features Section */}
       <section>
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-          Features
+        <h2 className="text-3xl font-bold text-center mb-12" style={{color: '#000000'}}>
+          {t('features.title')}
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
             <Package className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Product Management</h3>
-            <p className="text-gray-600">
-              Complete CRUD operations for products with real-time updates
+            <h3 className="text-xl font-semibold mb-2" style={{color: '#000000'}}>{t('features.productManagement.title')}</h3>
+            <p style={{color: '#000000', fontWeight: '600'}}>
+              {t('features.productManagement.description')}
             </p>
           </div>
           
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
             <ShoppingCart className="h-12 w-12 text-green-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Shopping Cart</h3>
-            <p className="text-gray-600">
-              Advanced cart management with Redux state management
+            <h3 className="text-xl font-semibold mb-2" style={{color: '#000000'}}>{t('features.shoppingCart.title')}</h3>
+            <p style={{color: '#000000', fontWeight: '600'}}>
+              {t('features.shoppingCart.description')}
             </p>
           </div>
           
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
             <Users className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">User Authentication</h3>
-            <p className="text-gray-600">
-              Secure JWT-based authentication and authorization
+            <h3 className="text-xl font-semibold mb-2" style={{color: '#000000'}}>{t('features.userAuthentication.title')}</h3>
+            <p style={{color: '#000000', fontWeight: '600'}}>
+              {t('features.userAuthentication.description')}
             </p>
           </div>
           
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
             <TrendingUp className="h-12 w-12 text-orange-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Performance</h3>
-            <p className="text-gray-600">
-              Redis cache, SSR/ISR, and optimized for speed
+            <h3 className="text-xl font-semibold mb-2" style={{color: '#000000'}}>{t('features.performance.title')}</h3>
+            <p style={{color: '#000000', fontWeight: '600'}}>
+              {t('features.performance.description')}
             </p>
           </div>
         </div>
@@ -76,13 +80,13 @@ Register
 
       {/* Tech Stack Section */}
       <section className="bg-white rounded-lg p-8 shadow-md">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          Tech Stack
+        <h2 className="text-3xl font-bold text-center mb-8" style={{color: '#000000'}}>
+          {t('techStack.title')}
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-blue-600">Backend</h3>
-            <ul className="space-y-2 text-gray-600">
+            <h3 className="text-xl font-semibold mb-4 text-blue-600">{t('techStack.backend')}</h3>
+            <ul className="space-y-2" style={{color: '#000000', fontWeight: '600'}}>
               <li>• .NET 8.0 Web API</li>
               <li>• Onion Architecture + CQRS</li>
               <li>• PostgreSQL Database</li>
@@ -92,13 +96,13 @@ Register
             </ul>
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-green-600">Frontend</h3>
-            <ul className="space-y-2 text-gray-600">
-              <li>• Next.js 14+ (App Router)</li>
+            <h3 className="text-xl font-semibold mb-4 text-green-600">{t('techStack.frontend')}</h3>
+            <ul className="space-y-2" style={{color: '#000000', fontWeight: '600'}}>
+              <li>• Next.js 15+ (App Router)</li>
               <li>• TypeScript</li>
               <li>• TailwindCSS</li>
               <li>• Redux Toolkit (RTK)</li>
-              <li>• Next-intl (i18n)</li>
+              <li>• Custom i18n</li>
               <li>• SSR/ISR Support</li>
             </ul>
           </div>

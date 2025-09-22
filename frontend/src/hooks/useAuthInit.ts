@@ -20,7 +20,7 @@ export const useAuthInit = () => {
             // Verify token by getting user profile
             const user = await authService.getProfile()
             dispatch(initializeAuth({ user, token }))
-          } catch (error) {
+          } catch {
             // Token is invalid, remove it
             localStorage.removeItem(process.env.NEXT_PUBLIC_AUTH_STORAGE_KEY!)
           }
@@ -32,7 +32,7 @@ export const useAuthInit = () => {
           try {
             const cartItems = JSON.parse(savedCart)
             dispatch(initializeCart(cartItems))
-          } catch (error) {
+          } catch {
             // Invalid cart data, ignore
             localStorage.removeItem('cart')
           }

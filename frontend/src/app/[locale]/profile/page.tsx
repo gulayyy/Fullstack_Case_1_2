@@ -24,7 +24,7 @@ export default function ProfilePage() {
   // Removed i18n
   const dispatch = useDispatch()
   const router = useRouter()
-  const { isAuthenticated, user: authUser } = useSelector((state: RootState) => state.auth)
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth)
   
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -44,8 +44,11 @@ export default function ProfilePage() {
       setIsLoading(true)
       const profileData = await authService.getProfile()
       setProfile(profileData)
-    } catch (error: any) {
-      setError(error.response?.data || 'Failed to load profile')
+    } catch (error: unknown) {
+      const errorMessage = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: string } }).response?.data || 'Failed to load profile'
+        : 'Failed to load profile'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

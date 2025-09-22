@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-// Removed i18n
+import { useTranslations } from '@/providers/I18nProvider'
 import { useDispatch } from 'react-redux'
 import { useRouter, useParams } from 'next/navigation'
 import { loginSuccess, setLoading } from '@/store/slices/authSlice'
@@ -12,7 +12,8 @@ import { LogIn, Eye, EyeOff } from 'lucide-react'
 export default function LoginPage() {
   const params = useParams()
   const locale = params.locale as string
-  // Removed i18n
+  const t = useTranslations('auth')
+  const tAuth = useTranslations('auth')
   const dispatch = useDispatch()
   const router = useRouter()
   
@@ -46,8 +47,11 @@ export default function LoginPage() {
       
       // Redirect to products page
       router.push(`/${locale}/products`)
-    } catch (error: any) {
-      setError(error.response?.data || 'Login failed. Please check your credentials.')
+    } catch (error: unknown) {
+      const errorMessage = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: string } }).response?.data || 'Login failed. Please check your credentials.'
+        : 'Login failed. Please check your credentials.'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
       dispatch(setLoading(false))
@@ -58,8 +62,8 @@ export default function LoginPage() {
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
       <div className="text-center mb-8">
         <LogIn className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900">Login</h1>
-        <p className="text-gray-600 mt-2">Welcome back! Please sign in to your account</p>
+        <h1 className="text-2xl font-bold" style={{color: '#000000'}}>{t('login')}</h1>
+        <p className="mt-2" style={{color: '#000000', fontWeight: '600'}}>Welcome back! Please sign in to your account</p>
       </div>
 
       {error && (
@@ -70,8 +74,8 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="usernameOrEmail" className="block text-sm font-medium text-gray-700 mb-2">
-            Username or Email
+          <label htmlFor="usernameOrEmail" className="block text-sm mb-2" style={{color: '#000000', fontWeight: '700'}}>
+            {t('usernameOrEmail')}
           </label>
           <input
             type="text"
@@ -81,13 +85,14 @@ export default function LoginPage() {
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter your username or email"
+            placeholder={t('placeholders.enterUsernameOrEmail')}
+            style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-            Password
+          <label htmlFor="password" className="block text-sm mb-2" style={{color: '#000000', fontWeight: '700'}}>
+            {t('password')}
           </label>
           <div className="relative">
             <input
@@ -98,7 +103,8 @@ export default function LoginPage() {
               onChange={handleChange}
               required
               className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter your password"
+              placeholder={t('placeholders.enterPassword')}
+              style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
             />
             <button
               type="button"
@@ -127,16 +133,16 @@ export default function LoginPage() {
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-gray-600">
-          Don't have an account?{' '}
-          <Link href={`/${locale}/auth/register`} className="text-blue-600 hover:text-blue-700 font-medium">
-            Register
+        <p style={{color: '#000000', fontWeight: '600'}}>
+          Don&apos;t have an account?{' '}
+          <Link href={`/${locale}/auth/register`} className="text-blue-600 hover:text-blue-700 font-semibold">
+            {tAuth('register')}
           </Link>
         </p>
       </div>
 
       <div className="mt-4 text-center">
-        <Link href={`/${locale}`} className="text-gray-500 hover:text-gray-700 text-sm">
+        <Link href={`/${locale}`} className="text-sm" style={{color: '#000000', fontWeight: '600'}}>
           ← Back to Home
         </Link>
       </div>

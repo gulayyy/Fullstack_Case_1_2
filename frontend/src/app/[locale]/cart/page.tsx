@@ -1,6 +1,6 @@
 'use client'
 
-// Removed i18n
+import { useTranslations } from '@/providers/I18nProvider'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'next/navigation'
 import { RootState } from '@/store/store'
@@ -12,7 +12,8 @@ import { ShoppingCart, Minus, Plus, Trash2, ArrowLeft } from 'lucide-react'
 export default function CartPage() {
   const params = useParams()
   const locale = params.locale as string
-  // Removed i18n
+  const t = useTranslations('cart')
+  const tCommon = useTranslations('common')
   const dispatch = useDispatch()
   const { items, totalItems, totalPrice } = useSelector((state: RootState) => state.cart)
 
@@ -45,14 +46,14 @@ export default function CartPage() {
     return (
       <div className="max-w-4xl mx-auto text-center py-16">
         <ShoppingCart className="h-24 w-24 text-gray-300 mx-auto mb-8" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Shopping Cart</h1>
-        <p className="text-xl text-gray-600 mb-8">Your cart is empty</p>
+        <h1 className="text-3xl font-bold mb-4" style={{color: '#000000'}}>{t('title')}</h1>
+        <p className="text-xl mb-8" style={{color: '#000000', fontWeight: '600'}}>{t('empty')}</p>
         <Link
           href={`/${locale}/products`}
           className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center space-x-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>Continue Shopping</span>
+          <span>{tCommon('continueShopping')}</span>
         </Link>
       </div>
     )
@@ -63,8 +64,8 @@ export default function CartPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold" style={{color: '#000000'}}>{t('title')}</h1>
+          <p className="mt-2" style={{color: '#000000', fontWeight: '600'}}>
             {totalItems} items in cart
           </p>
         </div>
@@ -101,7 +102,7 @@ export default function CartPage() {
                   >
                     {item.product.name}
                   </Link>
-                  <p className="text-sm text-gray-600 mt-1">{item.product.category}</p>
+                  <p className="text-sm text-gray-800 mt-1">{item.product.category}</p>
                   <p className="text-lg font-bold text-blue-600 mt-2">
                     {formatPrice(item.product.price)}
                   </p>
@@ -153,11 +154,11 @@ export default function CartPage() {
             
             <div className="space-y-4 mb-6">
               <div className="flex justify-between">
-                <span className="text-gray-600">Items ({totalItems})</span>
+                <span className="text-gray-800">Items ({totalItems})</span>
                 <span className="font-medium">{formatPrice(totalPrice)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Shipping</span>
+                <span className="text-gray-800">Shipping</span>
                 <span className="font-medium text-green-600">Free</span>
               </div>
               <div className="border-t pt-4">

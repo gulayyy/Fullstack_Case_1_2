@@ -21,7 +21,7 @@ export async function generateMetadata({
         images: [`https://via.placeholder.com/600x400/3B82F6/FFFFFF?text=${encodeURIComponent(product.name)}`],
       },
     }
-  } catch (error) {
+  } catch {
     return {
       title: 'Product Not Found - Case 1 Full Stack',
       description: 'The requested product could not be found.',

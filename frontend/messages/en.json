@@ -11,7 +11,12 @@
     "search": "Search",
     "filter": "Filter",
     "sort": "Sort",
-    "clear": "Clear"
+    "clear": "Clear",
+    "tryAgain": "Try Again",
+    "backToProducts": "Back to Products",
+    "continueShopping": "Continue Shopping",
+    "stock": "Stock",
+    "description": "Description"
   },
   "navigation": {
     "home": "Home",
@@ -34,7 +39,16 @@
     "registerSuccess": "Registration successful!",
     "loginError": "Login failed. Please check your credentials.",
     "registerError": "Registration failed. Please try again.",
-    "usernameOrEmail": "Username or Email"
+    "usernameOrEmail": "Username or Email",
+    "placeholders": {
+      "enterUsernameOrEmail": "Enter your username or email",
+      "enterPassword": "Enter your password",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "chooseUsername": "Choose a username",
+      "enterEmail": "Enter your email",
+      "createPassword": "Create a password (min 6 chars)"
+    }
   },
   "products": {
     "title": "Products",
@@ -59,7 +73,13 @@
     "sortByPrice": "Price",
     "sortByDate": "Date",
     "ascending": "Ascending",
-    "descending": "Descending"
+    "descending": "Descending",
+    "placeholders": {
+      "enterProductName": "Enter product name",
+      "enterProductDescription": "Enter product description",
+      "min": "Min",
+      "max": "Max"
+    }
   },
   "cart": {
     "title": "Shopping Cart",
@@ -70,5 +90,34 @@
     "clearCart": "Clear Cart",
     "checkout": "Checkout",
     "itemsInCart": "{count} items in cart"
+  },
+  "home": {
+    "hero": {
+      "subtitle": "Modern Full Stack Product Management Application"
+    },
+    "features": {
+      "title": "Features",
+      "productManagement": {
+        "title": "Product Management",
+        "description": "Complete CRUD operations for products with real-time updates"
+      },
+      "shoppingCart": {
+        "title": "Shopping Cart", 
+        "description": "Advanced cart management with Redux state management"
+      },
+      "userAuthentication": {
+        "title": "User Authentication",
+        "description": "Secure JWT-based authentication and authorization"
+      },
+      "performance": {
+        "title": "Performance",
+        "description": "Redis cache, SSR/ISR, and optimized for speed"
+      }
+    },
+    "techStack": {
+      "title": "Tech Stack",
+      "backend": "Backend",
+      "frontend": "Frontend"
+    }
   }
 }

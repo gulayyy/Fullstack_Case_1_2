@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-// Removed i18n
+import { useTranslations } from '@/providers/I18nProvider'
 import { useSelector } from 'react-redux'
 import { useRouter, useParams } from 'next/navigation'
 import { RootState } from '@/store/store'
@@ -12,7 +12,7 @@ import { Plus, ArrowLeft } from 'lucide-react'
 export default function AddProductPage() {
   const params = useParams()
   const locale = params.locale as string
-  // Removed i18n
+  const t = useTranslations('products')
   const router = useRouter()
   const { isAuthenticated } = useSelector((state: RootState) => state.auth)
   
@@ -62,15 +62,19 @@ export default function AddProductPage() {
       setTimeout(() => {
         router.push(`/${locale}/products`)
       }, 2000)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Product creation error:', error)
-      if (error.response?.data?.errors) {
-        // Handle validation errors
-        const errors = error.response.data.errors
-        const errorMessages = Object.values(errors).flat()
-        setError(errorMessages.join(', '))
+      if (error && typeof error === 'object' && 'response' in error) {
+        const responseError = error as { response?: { data?: { errors?: Record<string, string[]> } | string } }
+        if (responseError.response?.data && typeof responseError.response.data === 'object' && 'errors' in responseError.response.data) {
+          const errors = responseError.response.data.errors
+          const errorMessages = Object.values(errors || {}).flat()
+          setError((errorMessages as string[]).join(', '))
+        } else {
+          setError(typeof responseError.response?.data === 'string' ? responseError.response.data : 'Failed to create product')
+        }
       } else {
-        setError(error.response?.data || 'Failed to create product')
+        setError('Failed to create product')
       }
     } finally {
       setIsLoading(false)
@@ -119,8 +123,8 @@ export default function AddProductPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-              Product Name *
+            <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
+              {t('productName')} *
             </label>
             <input
               type="text"
@@ -130,13 +134,14 @@ export default function AddProductPage() {
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter product name"
+              placeholder={t('placeholders.enterProductName')}
+              style={{color: '#000000', fontWeight: '900', fontSize: '16px', backgroundColor: '#ffffff'}}
             />
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              Description
+            <label htmlFor="description" className="block text-sm font-semibold text-gray-900 mb-2">
+              {t('description')}
             </label>
             <textarea
               id="description"
@@ -145,14 +150,14 @@ export default function AddProductPage() {
               onChange={handleChange}
               rows={4}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter product description"
+              placeholder={t('placeholders.enterProductDescription')}
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                Price * ($)
+              <label htmlFor="price" className="block text-sm font-semibold text-gray-900 mb-2">
+                {t('price')} * ($)
               </label>
               <input
                 type="number"
@@ -169,8 +174,8 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label htmlFor="stock" className="block text-sm font-medium text-gray-700 mb-2">
-                Stock *
+              <label htmlFor="stock" className="block text-sm font-semibold text-gray-900 mb-2">
+                {t('stock')} *
               </label>
               <input
                 type="number"
@@ -187,8 +192,8 @@ export default function AddProductPage() {
           </div>
 
           <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-              Category *
+            <label htmlFor="category" className="block text-sm font-semibold text-gray-900 mb-2">
+              {t('category')} *
             </label>
             <select
               id="category"
