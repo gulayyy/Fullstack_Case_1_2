@@ -1,17 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations } from '@/providers/I18nProvider'
 import { useSelector } from 'react-redux'
 import { useRouter, useParams } from 'next/navigation'
 import { RootState } from '@/store/store'
 import { productService } from '@/services/productService'
 import Link from 'next/link'
-import { Plus, ArrowLeft } from 'lucide-react'
+import { Save, ArrowLeft, Loader2 } from 'lucide-react'
 
-export default function AddProductPage() {
+interface Product {
+  id: number
+  name: string
+  description: string
+  price: number
+  stock: number
+  category: string
+}
+
+export default function EditProductPage() {
   const params = useParams()
   const locale = params.locale as string
+  const productId = params.id as string
   const t = useTranslations('products')
   const router = useRouter()
   const { isAuthenticated } = useSelector((state: RootState) => state.auth)
@@ -24,14 +34,43 @@ export default function AddProductPage() {
     category: ''
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [isFetching, setIsFetching] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
   // Redirect if not authenticated
-  if (!isAuthenticated) {
-    router.push(`/${locale}/auth/login`)
-    return null
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push(`/${locale}/auth/login`)
+    }
+  }, [isAuthenticated, router, locale])
+
+  // Fetch product data
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setIsFetching(true)
+        const productData = await productService.getProductById(parseInt(productId))
+        
+        setFormData({
+          name: productData.name,
+          description: productData.description || '',
+          price: productData.price.toString(),
+          stock: productData.stock.toString(),
+          category: productData.category
+        })
+      } catch (error) {
+        console.error('Error fetching product:', error)
+        setError('Failed to load product data')
+      } finally {
+        setIsFetching(false)
+      }
+    }
+
+    if (productId) {
+      fetchProduct()
+    }
+  }, [productId])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -55,15 +94,15 @@ export default function AddProductPage() {
         category: formData.category
       }
 
-      await productService.createProduct(productData)
-      setSuccess('Product added successfully!')
+      await productService.updateProduct(parseInt(productId), productData)
+      setSuccess('Product updated successfully!')
       
-      // Redirect to products page with cache busting
+      // Redirect to product details page with cache busting
       setTimeout(() => {
-        router.push(`/${locale}/products?refresh=${Date.now()}`)
-      }, 2000)
+        router.push(`/${locale}/products/${productId}?refresh=${Date.now()}`)
+      }, 1500)
     } catch (error: unknown) {
-      console.error('Product creation error:', error)
+      console.error('Product update error:', error)
       if (error && typeof error === 'object' && 'response' in error) {
         const responseError = error as { response?: { data?: { errors?: Record<string, string[]> } | string } }
         if (responseError.response?.data && typeof responseError.response.data === 'object' && 'errors' in responseError.response.data) {
@@ -71,10 +110,10 @@ export default function AddProductPage() {
           const errorMessages = Object.values(errors || {}).flat()
           setError((errorMessages as string[]).join(', '))
         } else {
-          setError(typeof responseError.response?.data === 'string' ? responseError.response.data : 'Failed to create product')
+          setError(typeof responseError.response?.data === 'string' ? responseError.response.data : 'Failed to update product')
         }
       } else {
-        setError('Failed to create product')
+        setError('Failed to update product')
       }
     } finally {
       setIsLoading(false)
@@ -94,18 +133,30 @@ export default function AddProductPage() {
     'Technology'
   ]
 
+  if (!isAuthenticated) {
+    return null
+  }
+
+  if (isFetching) {
+    return (
+      <div className="flex items-center justify-center min-h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center mb-8">
         <Link
-          href={`/${locale}/products`}
+          href={`/${locale}/products/${productId}`}
           className="flex items-center text-gray-600 hover:text-gray-800 mr-4"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Products
+          Back to Product
         </Link>
-        <h1 className="text-3xl font-bold text-gray-900">Add Product</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-8">
@@ -222,14 +273,14 @@ export default function AddProductPage() {
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
               ) : (
                 <>
-                  <Plus className="h-4 w-4" />
-                  <span>Add Product</span>
+                  <Save className="h-4 w-4" />
+                  <span>Update Product</span>
                 </>
               )}
             </button>
             
             <Link
-              href={`/${locale}/products`}
+              href={`/${locale}/products/${productId}`}
               className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center justify-center"
             >
               Cancel

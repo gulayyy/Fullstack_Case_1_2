@@ -30,6 +30,7 @@ export default function ProductDetail({ params }: { params: { id: string; locale
   const [product, setProduct] = useState<Product | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -60,14 +61,17 @@ export default function ProductDetail({ params }: { params: { id: string; locale
     if (!product || !confirm('Are you sure you want to delete this product?')) return
 
     try {
+      setIsDeleting(true)
       await productService.deleteProduct(product.id)
-      // Redirect to products page
-      window.location.href = `/${params.locale}/products`
+      
+      // Temiz cache ile products sayfasına redirect
+      window.location.href = `/${params.locale}/products?refresh=${Date.now()}`
     } catch (error: unknown) {
       const errorMessage = error && typeof error === 'object' && 'response' in error 
         ? (error as { response?: { data?: string } }).response?.data || 'Failed to delete product'
         : 'Failed to delete product'
       alert('Failed to delete product: ' + errorMessage)
+      setIsDeleting(false)
     }
   }
 
@@ -128,7 +132,7 @@ export default function ProductDetail({ params }: { params: { id: string; locale
         <div className="space-y-4">
           <div className="relative aspect-square bg-gray-200 rounded-lg overflow-hidden">
             <Image
-              src={`https://via.placeholder.com/600x600/3B82F6/FFFFFF?text=${encodeURIComponent(product.name)}`}
+              src={`data:image/svg+xml;base64,${btoa(`<svg width="600" height="600" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="600" fill="#3B82F6"/><text x="300" y="300" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="24" fill="white">${product.name}</text></svg>`)}`}
               alt={product.name}
               fill
               className="object-cover"
@@ -187,14 +191,35 @@ export default function ProductDetail({ params }: { params: { id: string; locale
           </div>
 
           <div className="border-t pt-6">
-            <button
-              onClick={handleAddToCart}
-              disabled={product.stock === 0}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2 text-lg font-semibold"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span>{product.stock === 0 ? 'Out of Stock' : t('addToCart')}</span>
-            </button>
+            <div className="flex flex-col space-y-3">
+              <button
+                onClick={handleAddToCart}
+                disabled={product.stock === 0}
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2 text-lg font-semibold"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                <span>{product.stock === 0 ? 'Out of Stock' : t('addToCart')}</span>
+              </button>
+              
+              {isAuthenticated && (
+                <button
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="w-full bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
+                >
+                  {isDeleting ? (
+                    <span>Deleting...</span>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      <span>{t('deleteProduct')}</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Product Details */}

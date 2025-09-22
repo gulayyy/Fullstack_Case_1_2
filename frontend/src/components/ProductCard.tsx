@@ -41,7 +41,7 @@ export default function ProductCard({ product, onAddToCart, locale }: ProductCar
       {/* Product Image */}
       <div className="relative h-48 bg-gray-200">
         <Image
-          src={`https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=${encodeURIComponent(product.name)}`}
+          src={`data:image/svg+xml;base64,${btoa(`<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#3B82F6"/><text x="200" y="150" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="20" fill="white">${product.name}</text></svg>`)}`}
           alt={product.name}
           fill
           className="object-cover"

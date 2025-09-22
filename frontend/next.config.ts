@@ -12,7 +12,8 @@ const nextConfig: NextConfig = {
   },
   // Image optimization
   images: {
-    domains: ['via.placeholder.com'],
+    // SVG data URLs için format belirleme
+    formats: ['image/webp', 'image/avif'],
   },
 };
 

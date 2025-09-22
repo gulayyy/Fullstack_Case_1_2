@@ -87,7 +87,7 @@ export default function CartPage() {
                 {/* Product Image */}
                 <div className="relative w-20 h-20 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
                   <Image
-                    src={`https://via.placeholder.com/200x200/3B82F6/FFFFFF?text=${encodeURIComponent(item.product.name.substring(0, 10))}`}
+                    src={`data:image/svg+xml;base64,${btoa(`<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#3B82F6"/><text x="100" y="100" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="16" fill="white">${item.product.name.substring(0, 10)}</text></svg>`)}`}
                     alt={item.product.name}
                     fill
                     className="object-cover"

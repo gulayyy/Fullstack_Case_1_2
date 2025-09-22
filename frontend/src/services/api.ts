@@ -8,6 +8,16 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Development ortamında HTTPS sertifika doğrulamasını bypass et
+  ...(process.env.NODE_ENV === 'development' && {
+    timeout: 10000,
+    // HTTPS agent'ı sadece Node.js ortamında kullan
+    ...(typeof window === 'undefined' && {
+      httpsAgent: new (require('https').Agent)({
+        rejectUnauthorized: false
+      })
+    })
+  })
 })
 
 // Request interceptor to add auth token

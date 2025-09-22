@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from '@/providers/I18nProvider'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
@@ -34,20 +34,64 @@ export default function ProductsClient({ initialProducts, locale }: ProductsClie
   const dispatch = useDispatch()
   const { filteredProducts, isLoading, error } = useSelector((state: RootState) => state.products)
   const { isAuthenticated } = useSelector((state: RootState) => state.auth)
+  const [isClient, setIsClient] = useState(false)
 
+  // Client-side hydration check
   useEffect(() => {
-    // Set initial products from SSR
-    if (initialProducts.length > 0) {
-      dispatch(setProducts(initialProducts))
-    }
-  }, [initialProducts, dispatch])
+    setIsClient(true)
+  }, [])
+
+  // Bu effect her render'da çalışacak ve taze data çekecek
+  useEffect(() => {
+    const fetchLatestProducts = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?_t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        
+        const freshProducts = await response.json();
+        dispatch(setProducts(freshProducts));
+      } catch (error) {
+        console.error('Error fetching fresh products:', error);
+        // SSR data'yı fallback olarak kullan
+        if (initialProducts.length > 0) {
+          dispatch(setProducts(initialProducts));
+        }
+      }
+    };
+    
+    // Sayfa yüklendiğinde hemen taze veri çek
+    fetchLatestProducts();
+    
+    // 10 saniyede bir otomatik refresh
+    const intervalId = setInterval(fetchLatestProducts, 10000);
+    
+    return () => clearInterval(intervalId);
+  }, [dispatch, initialProducts])
 
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart(product))
   }
 
-  const refetchProducts = () => {
-    window.location.reload()
+  const refetchProducts = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`)
+      const products = await response.json()
+      dispatch(setProducts(products))
+    } catch (error) {
+      console.error('Failed to refetch products:', error)
+      // Fallback: reload page
+      window.location.reload()
+    }
   }
 
   if (isLoading) {
@@ -76,8 +120,19 @@ export default function ProductsClient({ initialProducts, locale }: ProductsClie
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-        {isAuthenticated && (
+        <div className="flex items-center space-x-4">
+          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+          <button 
+            onClick={refetchProducts} 
+            className="bg-gray-200 p-2 rounded-full hover:bg-gray-300"
+            title={tCommon('refresh')}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
+        {isClient && isAuthenticated && (
           <Link
             href={`/${locale}/products/add`}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
