@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+// Simple navigation without i18n for now
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
 import { logout } from '@/store/slices/authSlice'
@@ -9,7 +9,7 @@ import { usePathname } from 'next/navigation'
 import { ShoppingCart, User, LogOut, Home, Package, UserPlus, LogIn } from 'lucide-react'
 
 export default function Navigation() {
-  const t = useTranslations('navigation')
+  // Simple text labels without i18n for now
   const pathname = usePathname()
   const dispatch = useDispatch()
   
@@ -48,7 +48,7 @@ export default function Navigation() {
               }`}
             >
               <Home className="h-4 w-4" />
-              <span>{t('home')}</span>
+              <span>Home</span>
             </Link>
             
             <Link
@@ -60,7 +60,7 @@ export default function Navigation() {
               }`}
             >
               <Package className="h-4 w-4" />
-              <span>{t('products')}</span>
+              <span>Products</span>
             </Link>
 
             <Link
@@ -72,7 +72,7 @@ export default function Navigation() {
               }`}
             >
               <ShoppingCart className="h-4 w-4" />
-              <span>{t('cart')}</span>
+              <span>Cart</span>
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {totalItems}
@@ -117,7 +117,7 @@ export default function Navigation() {
                   className="flex items-center space-x-1 text-gray-500 hover:text-gray-700"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span className="hidden md:inline">{t('logout')}</span>
+                  <span className="hidden md:inline">Logout</span>
                 </button>
               </div>
             ) : (
@@ -127,14 +127,14 @@ export default function Navigation() {
                   className="flex items-center space-x-1 text-gray-500 hover:text-gray-700"
                 >
                   <LogIn className="h-4 w-4" />
-                  <span>{t('login')}</span>
+                  <span>Login</span>
                 </Link>
                 <Link
                   href={`/${locale}/auth/register`}
                   className="flex items-center space-x-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
                   <UserPlus className="h-4 w-4" />
-                  <span>{t('register')}</span>
+                  <span>Register</span>
                 </Link>
               </div>
             )}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
 import { addToCart } from '@/store/slices/cartSlice'
@@ -22,7 +22,7 @@ interface Product {
 }
 
 export default function ProductDetail({ params }: { params: { id: string; locale: string } }) {
-  const t = useTranslations('products')
+  // Removed i18n
   const dispatch = useDispatch()
   const { isAuthenticated } = useSelector((state: RootState) => state.auth)
   

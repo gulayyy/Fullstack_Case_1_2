@@ -6,10 +6,11 @@ import { productService } from '@/services/productService'
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { id: string; locale: string } 
+  params: Promise<{ id: string; locale: string }> 
 }): Promise<Metadata> {
   try {
-    const product = await productService.getProductById(parseInt(params.id))
+    const { id } = await params
+    const product = await productService.getProductById(parseInt(id))
     
     return {
       title: `${product.name} - Case 1 Full Stack`,
@@ -28,10 +29,11 @@ export async function generateMetadata({
   }
 }
 
-export default function ProductDetailPage({ 
+export default async function ProductDetailPage({ 
   params 
 }: { 
-  params: { id: string; locale: string } 
+  params: Promise<{ id: string; locale: string }> 
 }) {
-  return <ProductDetail params={params} />
+  const resolvedParams = await params
+  return <ProductDetail params={resolvedParams} />
 }

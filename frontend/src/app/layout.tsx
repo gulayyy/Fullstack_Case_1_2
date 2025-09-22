@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Case 1 Full Stack - Product Management',
-  description: 'Full Stack Product Management Application with Next.js and .NET',
+  title: 'Case 1 Full Stack',
+  description: 'Full Stack Product Management Application',
 }
 
 export default function RootLayout({

@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import { useSelector, useDispatch } from 'react-redux'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { RootState } from '@/store/store'
 import { logout } from '@/store/slices/authSlice'
 import { authService } from '@/services/authService'
@@ -18,8 +18,10 @@ interface UserProfile {
   createdAt: string
 }
 
-export default function ProfilePage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations('navigation')
+export default function ProfilePage() {
+  const params = useParams()
+  const locale = params.locale as string
+  // Removed i18n
   const dispatch = useDispatch()
   const router = useRouter()
   const { isAuthenticated, user: authUser } = useSelector((state: RootState) => state.auth)
@@ -167,7 +169,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                   className="w-full flex items-center justify-center space-x-2 bg-red-600 text-white px-4 py-3 rounded-md hover:bg-red-700 transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
-                  <span>{t('logout')}</span>
+                  <span>Logout</span>
                 </button>
               </div>
 

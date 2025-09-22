@@ -1,16 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import { useDispatch } from 'react-redux'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { loginSuccess, setLoading } from '@/store/slices/authSlice'
 import { authService } from '@/services/authService'
 import Link from 'next/link'
 import { UserPlus, Eye, EyeOff } from 'lucide-react'
 
-export default function RegisterPage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations('auth')
+export default function RegisterPage() {
+  const params = useParams()
+  const locale = params.locale as string
+  // Removed i18n
   const dispatch = useDispatch()
   const router = useRouter()
   
@@ -55,7 +57,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
         const errorMessages = Object.values(errors).flat()
         setError(errorMessages.join(', '))
       } else {
-        setError(error.response?.data || t('registerError'))
+        setError(error.response?.data || 'Registration failed. Please try again.')
       }
     } finally {
       setIsLoading(false)
@@ -67,7 +69,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
       <div className="text-center mb-8">
         <UserPlus className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900">{t('register')}</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Register</h1>
         <p className="text-gray-600 mt-2">Create your account to get started</p>
       </div>
 
@@ -81,7 +83,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('firstName')}
+              First Name
             </label>
             <input
               type="text"
@@ -97,7 +99,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
           <div>
             <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('lastName')}
+              Last Name
             </label>
             <input
               type="text"
@@ -114,7 +116,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
         <div>
           <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-            {t('username')}
+            Username
           </label>
           <input
             type="text"
@@ -130,7 +132,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            {t('email')}
+            Email
           </label>
           <input
             type="email"
@@ -146,7 +148,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            {t('password')}
+            Password
           </label>
           <div className="relative">
             <input
@@ -180,7 +182,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
           ) : (
             <>
               <UserPlus className="h-4 w-4" />
-              <span>{t('register')}</span>
+              <span>Register</span>
             </>
           )}
         </button>
@@ -190,7 +192,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
         <p className="text-gray-600">
           Already have an account?{' '}
           <Link href={`/${locale}/auth/login`} className="text-blue-600 hover:text-blue-700 font-medium">
-            {t('login')}
+            Login
           </Link>
         </p>
       </div>

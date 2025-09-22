@@ -1,15 +1,18 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import { useSelector, useDispatch } from 'react-redux'
+import { useParams } from 'next/navigation'
 import { RootState } from '@/store/store'
 import { removeFromCart, updateQuantity, clearCart } from '@/store/slices/cartSlice'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Minus, Plus, Trash2, ArrowLeft } from 'lucide-react'
 
-export default function CartPage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations('cart')
+export default function CartPage() {
+  const params = useParams()
+  const locale = params.locale as string
+  // Removed i18n
   const dispatch = useDispatch()
   const { items, totalItems, totalPrice } = useSelector((state: RootState) => state.cart)
 
@@ -42,8 +45,8 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
     return (
       <div className="max-w-4xl mx-auto text-center py-16">
         <ShoppingCart className="h-24 w-24 text-gray-300 mx-auto mb-8" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">{t('title')}</h1>
-        <p className="text-xl text-gray-600 mb-8">{t('empty')}</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">Shopping Cart</h1>
+        <p className="text-xl text-gray-600 mb-8">Your cart is empty</p>
         <Link
           href={`/${locale}/products`}
           className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center space-x-2"
@@ -60,9 +63,9 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
           <p className="text-gray-600 mt-2">
-            {t('itemsInCart', { count: totalItems })}
+            {totalItems} items in cart
           </p>
         </div>
         <button
@@ -70,7 +73,7 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
           className="text-red-600 hover:text-red-700 flex items-center space-x-1"
         >
           <Trash2 className="h-4 w-4" />
-          <span>{t('clearCart')}</span>
+          <span>Clear Cart</span>
         </button>
       </div>
 
@@ -135,7 +138,7 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
                     onClick={() => handleRemoveItem(item.product.id)}
                     className="text-red-600 hover:text-red-700 text-sm mt-1"
                   >
-                    {t('removeItem')}
+                    Remove Item
                   </button>
                 </div>
               </div>
@@ -159,14 +162,14 @@ export default function CartPage({ params: { locale } }: { params: { locale: str
               </div>
               <div className="border-t pt-4">
                 <div className="flex justify-between">
-                  <span className="text-lg font-semibold text-gray-900">{t('total')}</span>
+                  <span className="text-lg font-semibold text-gray-900">Total</span>
                   <span className="text-lg font-bold text-blue-600">{formatPrice(totalPrice)}</span>
                 </div>
               </div>
             </div>
 
             <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold mb-4">
-              {t('checkout')}
+              Checkout
             </button>
 
             <Link

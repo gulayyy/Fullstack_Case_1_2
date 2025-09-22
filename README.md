@@ -53,6 +53,10 @@ cd frontend
 # Install dependencies
 npm install
 
+# Create environment file (optional - defaults are set in next.config.ts)
+cp .env.example .env.local
+# Edit .env.local with your configuration if needed
+
 # Run frontend
 npm run dev
 ```
@@ -191,13 +195,16 @@ Update `backend/appsettings.Development.json`:
 ```
 
 ### Frontend Configuration
-Update `frontend/.env.local`:
+Create `frontend/.env.local` (optional - defaults are provided):
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5125/api
 NEXT_PUBLIC_AUTH_STORAGE_KEY=case1_auth_token
 NEXT_PUBLIC_APP_NAME=Case 1 Full Stack
+NODE_ENV=development
 ```
+
+**Note**: Default values are already configured in `next.config.ts`, so `.env.local` is optional unless you need custom values.
 
 ---
 

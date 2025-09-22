@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
+// Removed i18n import
 import { useSelector, useDispatch } from 'react-redux'
+import { useParams } from 'next/navigation'
 import { RootState } from '@/store/store'
 import { setProducts, setLoading, setError, setFilters } from '@/store/slices/productsSlice'
 import { addToCart } from '@/store/slices/cartSlice'
@@ -23,8 +24,9 @@ interface Product {
   updatedAt: string
 }
 
-export default function ProductsPage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations('products')
+export default function ProductsPage() {
+  const params = useParams()
+  const locale = params.locale as string
   const dispatch = useDispatch()
   const { filteredProducts, isLoading, error } = useSelector((state: RootState) => state.products)
   const { isAuthenticated } = useSelector((state: RootState) => state.auth)
@@ -73,14 +75,14 @@ export default function ProductsPage({ params: { locale } }: { params: { locale:
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Products</h1>
         {isAuthenticated && (
           <Link
             href={`/${locale}/products/add`}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
           >
             <Plus className="h-4 w-4" />
-            <span>{t('addProduct')}</span>
+            <span>Add Product</span>
           </Link>
         )}
       </div>
@@ -91,7 +93,7 @@ export default function ProductsPage({ params: { locale } }: { params: { locale:
       {/* Products Grid */}
       {filteredProducts.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">{t('noProducts')}</p>
+          <p className="text-gray-500 text-lg">No products found</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

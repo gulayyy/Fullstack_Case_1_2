@@ -1,16 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import { useDispatch } from 'react-redux'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { loginSuccess, setLoading } from '@/store/slices/authSlice'
 import { authService } from '@/services/authService'
 import Link from 'next/link'
 import { LogIn, Eye, EyeOff } from 'lucide-react'
 
-export default function LoginPage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations('auth')
+export default function LoginPage() {
+  const params = useParams()
+  const locale = params.locale as string
+  // Removed i18n
   const dispatch = useDispatch()
   const router = useRouter()
   
@@ -45,7 +47,7 @@ export default function LoginPage({ params: { locale } }: { params: { locale: st
       // Redirect to products page
       router.push(`/${locale}/products`)
     } catch (error: any) {
-      setError(error.response?.data || t('loginError'))
+      setError(error.response?.data || 'Login failed. Please check your credentials.')
     } finally {
       setIsLoading(false)
       dispatch(setLoading(false))
@@ -56,7 +58,7 @@ export default function LoginPage({ params: { locale } }: { params: { locale: st
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
       <div className="text-center mb-8">
         <LogIn className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-900">{t('login')}</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Login</h1>
         <p className="text-gray-600 mt-2">Welcome back! Please sign in to your account</p>
       </div>
 
@@ -69,7 +71,7 @@ export default function LoginPage({ params: { locale } }: { params: { locale: st
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="usernameOrEmail" className="block text-sm font-medium text-gray-700 mb-2">
-            {t('usernameOrEmail')}
+            Username or Email
           </label>
           <input
             type="text"
@@ -85,7 +87,7 @@ export default function LoginPage({ params: { locale } }: { params: { locale: st
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-            {t('password')}
+            Password
           </label>
           <div className="relative">
             <input
@@ -118,7 +120,7 @@ export default function LoginPage({ params: { locale } }: { params: { locale: st
           ) : (
             <>
               <LogIn className="h-4 w-4" />
-              <span>{t('login')}</span>
+              <span>Login</span>
             </>
           )}
         </button>
@@ -128,7 +130,7 @@ export default function LoginPage({ params: { locale } }: { params: { locale: st
         <p className="text-gray-600">
           Don't have an account?{' '}
           <Link href={`/${locale}/auth/register`} className="text-blue-600 hover:text-blue-700 font-medium">
-            {t('register')}
+            Register
           </Link>
         </p>
       </div>

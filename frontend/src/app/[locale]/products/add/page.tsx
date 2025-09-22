@@ -1,16 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import { useSelector } from 'react-redux'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { RootState } from '@/store/store'
 import { productService } from '@/services/productService'
 import Link from 'next/link'
 import { Plus, ArrowLeft } from 'lucide-react'
 
-export default function AddProductPage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations('products')
+export default function AddProductPage() {
+  const params = useParams()
+  const locale = params.locale as string
+  // Removed i18n
   const router = useRouter()
   const { isAuthenticated } = useSelector((state: RootState) => state.auth)
   
@@ -54,7 +56,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
       }
 
       await productService.createProduct(productData)
-      setSuccess(t('productAdded'))
+      setSuccess('Product added successfully!')
       
       // Redirect to products page after 2 seconds
       setTimeout(() => {
@@ -99,7 +101,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
           <ArrowLeft className="h-4 w-4 mr-1" />
           Back to Products
         </Link>
-        <h1 className="text-3xl font-bold text-gray-900">{t('addProduct')}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Add Product</h1>
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-8">
@@ -118,7 +120,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-              {t('productName')} *
+              Product Name *
             </label>
             <input
               type="text"
@@ -134,7 +136,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              {t('description')}
+              Description
             </label>
             <textarea
               id="description"
@@ -150,7 +152,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('price')} * ($)
+                Price * ($)
               </label>
               <input
                 type="number"
@@ -168,7 +170,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
 
             <div>
               <label htmlFor="stock" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('stock')} *
+                Stock *
               </label>
               <input
                 type="number"
@@ -186,7 +188,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
 
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-              {t('category')} *
+              Category *
             </label>
             <select
               id="category"
@@ -216,7 +218,7 @@ export default function AddProductPage({ params: { locale } }: { params: { local
               ) : (
                 <>
                   <Plus className="h-4 w-4" />
-                  <span>{t('addProduct')}</span>
+                  <span>Add Product</span>
                 </>
               )}
             </button>

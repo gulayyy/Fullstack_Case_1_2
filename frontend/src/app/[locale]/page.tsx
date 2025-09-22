@@ -1,9 +1,12 @@
-import { useTranslations } from 'next-intl'
+'use client'
+
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { Package, ShoppingCart, Users, TrendingUp } from 'lucide-react'
 
-export default function HomePage({ params: { locale } }: { params: { locale: string } }) {
-  const t = useTranslations()
+export default function HomePage() {
+  const params = useParams()
+  const locale = params.locale as string
 
   return (
     <div className="space-y-12">
@@ -20,13 +23,13 @@ export default function HomePage({ params: { locale } }: { params: { locale: str
             href={`/${locale}/products`}
             className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           >
-            {t('navigation.products')}
+Products
           </Link>
           <Link
             href={`/${locale}/auth/register`}
             className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
           >
-            {t('navigation.register')}
+Register
           </Link>
         </div>
       </section>

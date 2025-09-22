@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Eye, Calendar } from 'lucide-react'
@@ -23,7 +23,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onAddToCart, locale }: ProductCardProps) {
-  const t = useTranslations('products')
+  // Removed i18n
   
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US')
@@ -66,7 +66,7 @@ export default function ProductCard({ product, onAddToCart, locale }: ProductCar
             {formatPrice(product.price)}
           </span>
           <span className="text-sm text-gray-500">
-            {t('stock')}: {product.stock}
+            Stock: {product.stock}
           </span>
         </div>
 
@@ -82,7 +82,7 @@ export default function ProductCard({ product, onAddToCart, locale }: ProductCar
             className="flex-1 bg-gray-100 text-gray-700 px-3 py-2 rounded-md hover:bg-gray-200 transition-colors flex items-center justify-center space-x-1"
           >
             <Eye className="h-4 w-4" />
-            <span className="text-sm">{t('viewDetails')}</span>
+            <span className="text-sm">View Details</span>
           </Link>
           
           <button
@@ -91,7 +91,7 @@ export default function ProductCard({ product, onAddToCart, locale }: ProductCar
             className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-1"
           >
             <ShoppingCart className="h-4 w-4" />
-            <span className="text-sm">{t('addToCart')}</span>
+            <span className="text-sm">Add to Cart</span>
           </button>
         </div>
       </div>

@@ -1,13 +1,13 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+// Removed i18n
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '@/store/store'
 import { setFilters, clearFilters } from '@/store/slices/productsSlice'
 import { Filter, X } from 'lucide-react'
 
 export default function ProductFilters() {
-  const t = useTranslations('products')
+  // Removed i18n
   const dispatch = useDispatch()
   const { filters, products } = useSelector((state: RootState) => state.products)
 
@@ -27,14 +27,14 @@ export default function ProductFilters() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Filter className="h-5 w-5 text-gray-600" />
-          <h3 className="text-lg font-semibold text-gray-900">{t('filter')}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Filter</h3>
         </div>
         <button
           onClick={handleClearFilters}
           className="text-red-600 hover:text-red-700 flex items-center space-x-1 text-sm"
         >
           <X className="h-4 w-4" />
-          <span>{t('clear')}</span>
+          <span>Clear</span>
         </button>
       </div>
 
@@ -42,14 +42,14 @@ export default function ProductFilters() {
         {/* Category Filter */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t('filterByCategory')}
+            Filter by Category
           </label>
           <select
             value={filters.category}
             onChange={(e) => handleFilterChange('category', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">{t('category')}</option>
+            <option value="">All Categories</option>
             {categories.map(category => (
               <option key={category} value={category}>
                 {category}
@@ -61,7 +61,7 @@ export default function ProductFilters() {
         {/* Price Range */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t('priceRange')}
+            Price Range
           </label>
           <div className="flex space-x-2">
             <input
@@ -84,31 +84,31 @@ export default function ProductFilters() {
         {/* Sort By */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t('sortBy')}
+            Sort By
           </label>
           <select
             value={filters.sortBy}
             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="createdAt">{t('sortByDate')}</option>
-            <option value="name">{t('sortByName')}</option>
-            <option value="price">{t('sortByPrice')}</option>
+            <option value="createdAt">Date</option>
+            <option value="name">Name</option>
+            <option value="price">Price</option>
           </select>
         </div>
 
         {/* Sort Order */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t('sort')}
+            Order
           </label>
           <select
             value={filters.sortOrder}
             onChange={(e) => handleFilterChange('sortOrder', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="desc">{t('descending')}</option>
-            <option value="asc">{t('ascending')}</option>
+            <option value="desc">High to Low</option>
+            <option value="asc">Low to High</option>
           </select>
         </div>
       </div>
