@@ -1,7 +1,12 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "case1-frontend",
+  "version": "1.0.0",
+  "description": "Full Stack Developer Case Study - Frontend",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gulayyy/Fullstack_Case_1_2.git"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres-case:
+    image: postgres:15
+    container_name: postgres-case
+    environment:
+      POSTGRES_DB: ProductDb_Dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - case1-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Cache
+  redis-case:
+    image: redis:alpine
+    container_name: redis-case
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - case1-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: case1-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-case;Database=ProductDb_Dev;Username=postgres;Password=password
+      - ConnectionStrings__Redis=redis-case:6379
+      - JWT__SecretKey=DevSuperSecretKeyThatShouldBeAtLeast256BitsLongForHmacSha256Algorithm
+      - JWT__Issuer=Case1API
+      - JWT__Audience=Case1APIUsers
+      - JWT__AccessTokenExpiryMinutes=60
+    ports:
+      - "5125:5125"
+    depends_on:
+      postgres-case:
+        condition: service_healthy
+      redis-case:
+        condition: service_healthy
+    networks:
+      - case1-network
+    volumes:
+      - ./backend/logs:/app/logs
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: case1-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5125/api
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - case1-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  case1-network:
+    driver: bridge

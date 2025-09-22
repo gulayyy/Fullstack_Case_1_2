@@ -1,0 +1,36 @@
+{
+  "name": "fullstack-case-1-2",
+  "version": "1.0.0",
+  "description": "Full Stack Developer Case Study - .NET 8.0 Backend + Next.js 15 Frontend",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gulayyy/Fullstack_Case_1_2.git"
+  },
+  "scripts": {
+    "setup": "npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "cd backend && dotnet restore",
+    "setup:frontend": "cd frontend && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && dotnet run",
+    "dev:frontend": "cd frontend && npm run dev",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
+  },
+  "keywords": [
+    "fullstack",
+    "dotnet",
+    "nextjs",
+    "postgresql",
+    "redis",
+    "jwt",
+    "onion-architecture",
+    "cqrs",
+    "case-study"
+  ],
+  "author": "gulayyy",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
